@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings, TupleSections #-}
 
-module Forms where
+module Snap.Plus.Forms where
 
 import Control.Monad
 import Control.Monad.Trans (liftIO)
@@ -16,7 +16,7 @@ import Network.DNS.Resolver
 import Network.DNS.Types
 
 import Application
-import Helpers
+import Snap.Plus
 
 requiredForm :: Text -> Form Text AppHandler (Maybe a) -> Form Text AppHandler a
 requiredForm msg = validate (maybe (Error msg) Success)
@@ -61,7 +61,7 @@ nonEmptyTextForm = nonEmpty (text Nothing)
 
 
 slugForm :: Formlet Text AppHandler Text
-slugForm = check "Cannot have spaces" (not . T.isInfixOf " ") . text
+slugForm t = T.toLower <$> check "Cannot have spaces" (not . T.isInfixOf " ") (text t)
 
 
 deleteForm :: Text -> Form Text AppHandler Bool

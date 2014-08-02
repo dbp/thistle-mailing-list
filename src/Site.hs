@@ -4,16 +4,15 @@ module Site
   ( app, routes
   ) where
 
+import           Prelude hiding ((++))
 import           Control.Monad.State
 import           Data.ByteString (ByteString)
 import           Data.Monoid
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import           Snap.Core
-import           Snap.Snaplet
 import           Snap.Snaplet.Heist
 import           Snap.Snaplet.Session.Backends.CookieSession
-import           Snap.Snaplet.PostgresqlSimple
+import           Snap.Snaplet.PostgresqlSimple.Plus
 import           Snap.Snaplet.RedisDB
 import           Snap.Util.FileServe
 import           Heist
@@ -24,13 +23,15 @@ import           Heist.Splices.Ignore
 import           Network.DNS.Resolver
 import qualified Data.Configurator as C
 
-import           Helpers
+import           Snap.Plus
 import           Application
 
 import qualified List.Types as L
+import qualified List.Handlers (top)
 
 routes :: [(ByteString, AppHandler ())]
-routes = [ ("",       heistServe)
+routes = [ ("",       List.Handlers.top)
+         , ("",       heistServe)
          , ("",       serveDirectory "static")
          , ("",       render "notfound")
          ]

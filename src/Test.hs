@@ -20,13 +20,12 @@ import Data.Time.Format
 import System.Locale (defaultTimeLocale)
 import System.Random (randomIO)
 
-import Snap.Core hiding (redirect)
 import Snap.Snaplet
 import Snap.Snaplet.Auth
 import Snap.Snaplet.Session
 import Snap.Test.BDD
 
-import Helpers
+import Snap.Plus
 import Application
 import Site
 

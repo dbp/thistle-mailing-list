@@ -56,6 +56,7 @@ Executable thistle
     snap-extras >= 0.9 && < 0.10,
     base                      >= 4.4      && < 5,
     lens                      >= 3.7.6    && < 4.4,
+    profunctors,
     karamaan-opaleye,
     karamaan-plankton,
     product-profunctors,

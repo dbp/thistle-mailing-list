@@ -10,18 +10,20 @@ module Opaleye (
   , module Control.Category
   , module Control.Arrow
   , module Database.HaskellDB.Query
+  , module Data.Profunctor
   , module Data.Profunctor.Product
   , module Data.Profunctor.Product.Default
   , module Data.Profunctor.Product.TH
   , module Karamaan.Opaleye.Wire
   , module Karamaan.Opaleye.ExprArr
   , module Karamaan.Opaleye.QueryArr
+  , module Karamaan.Opaleye.MakeExpr
   , module Karamaan.Opaleye.Manipulation
   , showQuery
   , restrictNullable
   , I
   , MaybeWire
-  , Const
+  , Con
   , runO
   , delO
   , insO
@@ -41,13 +43,14 @@ import Control.Category ((<<<))
 import Control.Arrow (returnA, second)
 import Karamaan.Opaleye.Reexports
 import Karamaan.Opaleye.Operators2 (not)
-import Karamaan.Opaleye.Table (makeTableDef, Table(Table))
+import Karamaan.Opaleye.Table (makeTableDef, Table(Table), queryTable)
 import Karamaan.Opaleye.SQL (showSqlForPostgresDefault)
 import Karamaan.Opaleye.Unpackspec (Unpackspec)
 import Karamaan.Opaleye.RunQuery (QueryRunner, fieldQueryRunner)
 import Karamaan.Opaleye.Wire (Wire(Wire))
 import Karamaan.Opaleye.ExprArr (ExprArr, Expr)
 import Karamaan.Opaleye.QueryArr (Query)
+import Karamaan.Opaleye.MakeExpr (makeExpr, makeJustExpr, makeMaybeExpr)
 import Karamaan.Opaleye.Manipulation (AssocerE, Assocer, TableExprRunner,
                                       executeDeleteConnDef,executeInsertReturningConnDef,
                                       executeUpdateConnDef,executeInsertConnDef,
@@ -56,6 +59,8 @@ import Karamaan.Opaleye.Manipulation (AssocerE, Assocer, TableExprRunner,
 
 import Database.HaskellDB.Query (ShowConstant(..))
 import Database.HaskellDB.PrimQuery (Literal(DateLit))
+
+import Data.Profunctor
 import Data.Profunctor.Product.TH (makeAdaptorAndInstance)
 import Data.Profunctor.Product
 import Data.Profunctor.Product.Default (Default, def)
@@ -73,7 +78,7 @@ import Application
 
 type I a = a
 type MaybeWire a = Maybe (Wire a)
-type Const s a = s
+type Con s a = s
 
 withPgConn :: (Connection -> AppHandler a) -> AppHandler a
 withPgConn f  =  do sdb <- use db
