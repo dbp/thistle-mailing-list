@@ -1,0 +1,38 @@
+Description: (Description here.)
+Created: 2014-08-02 17:16:25.564523 UTC
+Depends:
+Apply:
+  CREATE TABLE lists (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    token TEXT NOT NULL DEFAULT substring(md5(random()::TEXT) from 0 for 10)
+  );
+  CREATE INDEX lists_token_index ON lists(token);
+
+  CREATE TABLE members (
+    id SERIAL PRIMARY KEY,
+    email TEXT NOT NULL,
+    list_id INTEGER NOT NULL REFERENCES lists(id),
+    failed_at TIMESTAMPTZ,
+    unsubscribed_at TIMESTAMPTZ,
+    token TEXT NOT NULL DEFAULT substring(md5(random()::TEXT) from 0 for 20)
+  );
+  CREATE INDEX members_token_index ON members(token);
+  CREATE INDEX members_list_id_index ON members(list_id) ;
+
+
+  CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    subject TEXT NOT NULL,
+    body TEXT NOT NULL,
+    list_id INTEGER NOT NULL REFERENCES lists(id),
+    sent_at TIMESTAMPTZ
+  );
+  CREATE INDEX messages_list_id_index ON messages(list_id) ;
+
+
+
+Revert:
+  DROP TABLE messages;
+  DROP TABLE members;
+  DROP TABLE lists;
