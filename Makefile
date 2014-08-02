@@ -1,7 +1,7 @@
 PROJECT=thistle
 
 EXECUTABLE=$(BINDIR)/$(PROJECT)
-DEPS=
+DEPS=karamaan/karamaan-opaleye karamaan/karamaan-plankton karamaan/product-profunctors tomjaguarpaw/haskelldb
 TESTMAIN=src/Test.hs
 INSTALLFLAGS=-j -fdevelopment --reorder-goals
 MOODEVEL=-c devel.cfg

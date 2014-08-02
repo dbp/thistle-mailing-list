@@ -27,6 +27,8 @@ import qualified Data.Configurator as C
 import           Helpers
 import           Application
 
+import qualified List.Types as L
+
 routes :: [(ByteString, AppHandler ())]
 routes = [ ("",       heistServe)
          , ("",       serveDirectory "static")
