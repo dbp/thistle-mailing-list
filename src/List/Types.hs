@@ -31,6 +31,9 @@ listPath (List' _ nm tok) = "/" ++ nm ++ "/" ++ tok
 addMemberPath :: List -> Text
 addMemberPath list = listPath list ++ "/members/new"
 
+addMessagePath :: List -> Text
+addMessagePath list = listPath list ++ "/messages/new"
+
 listsTable :: Table ListWire
 listsTable = Table "lists" (List' (Wire "id") (Wire "name") (Wire "token"))
 

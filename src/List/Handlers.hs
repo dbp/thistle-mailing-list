@@ -14,6 +14,7 @@ import List.Types
 import List.Forms
 import List.Splices
 import qualified Member.Handlers
+import qualified Message.Handlers
 
 top :: AppHandler ()
 top = route [("new", newH)
@@ -22,7 +23,9 @@ top = route [("new", newH)
                        token <- getParam' "token"
                        list <- require $ getListByNameToken nm token
                        route [("", ifTop $ showH list)
-                             ,("members", Member.Handlers.top list)]
+                             ,("members", Member.Handlers.top list)
+                             ,("messages", Message.Handlers.top list)
+                             ]
 
 
 newH :: AppHandler ()

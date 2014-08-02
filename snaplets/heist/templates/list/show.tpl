@@ -2,6 +2,13 @@
 
   <h1><name/></h1>
 
+  <a href="${addMessagePath}">Add message</a>
+  <ul>
+    <messages>
+      <li><a href="${editPath}"><subject/></a> <not-sent>Not sent</not-sent><is-sent>Sent</is-sent></li>
+    </messages>
+  </ul>
+
   <a href="${addMemberPath}">Add member</a>
   <ul>
     <members>
