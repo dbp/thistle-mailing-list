@@ -5,7 +5,7 @@
   <a href="${addMemberPath}">Add member</a>
   <ul>
     <members>
-      <li><email/></li>
+      <li><email/> <is-subscribed><a href="${unsubscribePath}">unsubscribe</a></is-subscribed></li>
     </members>
   </ul>
 

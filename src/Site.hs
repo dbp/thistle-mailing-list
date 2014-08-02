@@ -27,9 +27,11 @@ import           Snap.Plus
 import           Application
 
 import qualified List.Handlers (top)
+import qualified Member.Handlers (top')
 
 routes :: [(ByteString, AppHandler ())]
 routes = [ ("",       List.Handlers.top)
+         , ("",       Member.Handlers.top')
          , ("",       heistServe)
          , ("",       serveDirectory "static")
          , ("",       render "notfound")

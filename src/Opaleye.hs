@@ -24,6 +24,8 @@ module Opaleye (
   , I
   , MaybeWire
   , Con
+  , econstant
+  , eeq
   , runO
   , delO
   , insO
@@ -40,7 +42,7 @@ import Data.Time.Clock.POSIX (utcTimeToPOSIXSeconds)
 import System.Time (ClockTime(TOD), toUTCTime)
 import Control.Category ((<<<))
 
-import Control.Arrow (returnA, second)
+import Control.Arrow (returnA, second, arr)
 import Karamaan.Opaleye.Reexports
 import Karamaan.Opaleye.Operators2 (not)
 import Karamaan.Opaleye.Table (makeTableDef, Table(Table), queryTable)
@@ -49,6 +51,7 @@ import Karamaan.Opaleye.Unpackspec (Unpackspec)
 import Karamaan.Opaleye.RunQuery (QueryRunner, fieldQueryRunner)
 import Karamaan.Opaleye.Wire (Wire(Wire))
 import Karamaan.Opaleye.ExprArr (ExprArr, Expr)
+import qualified Karamaan.Opaleye.ExprArr as E
 import Karamaan.Opaleye.QueryArr (Query)
 import Karamaan.Opaleye.MakeExpr (makeExpr, makeJustExpr, makeMaybeExpr)
 import Karamaan.Opaleye.Manipulation (AssocerE, Assocer, TableExprRunner,
@@ -75,6 +78,13 @@ import Snap.Snaplet.PostgresqlSimple hiding (Query)
 import Data.Int (Int64)
 
 import Application
+
+-- NOTE(dbp 2014-08-02): This is a REALLY dumb aspect of the current
+-- API. There are identically named functions for Exprs and Queries,
+-- meaning there CANT be a single export module (without renaming,
+-- which is what we're doing here).
+econstant = E.constant
+eeq = E.eq
 
 type I a = a
 type MaybeWire a = Maybe (Wire a)

@@ -3,7 +3,7 @@
              TypeFamilies, MultiParamTypeClasses,OverloadedStrings, LiberalTypeSynonyms #-}
 module List.Types where
 
-import Prelude hiding ((++))
+import Prelude hiding (id, (++))
 import Snap.Plus
 import Data.Maybe
 import Data.Text (Text)
