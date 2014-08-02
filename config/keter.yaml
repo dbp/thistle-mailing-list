@@ -1,0 +1,14 @@
+exec: ../thistle
+args:
+    - -e
+    - prod
+host: thistle.dbpmail.net
+static-hosts:
+    - host: static.thistle.dbpmail.net
+      root: ../static
+postgres: false
+redirects:
+    - from: beta.thistle.dbpmail.net
+      to: thistle.dbpmail.net
+    - from: www.thistle.dbpmail.net
+      to: thistle.dbpmail.net

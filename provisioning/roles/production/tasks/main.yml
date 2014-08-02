@@ -1,0 +1,28 @@
+---
+
+# setup host user
+# install keter
+# install nginx
+# setup backups
+
+- name: add local key to the authorized_keys of vagrant
+  authorized_key: user=host key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: install database creation library
+  sudo: yes
+  apt: pkg=python-psycopg2 update_cache=yes
+
+- name: create production database
+  sudo: yes
+  sudo_user: postgres
+  postgresql_db: name=thistle_prod
+
+- name: ensure user has access to production database
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user: db=thistle_prod name=thistle_user password=PRODUCTION_PASSWORD priv=ALL
+
+- name: ensure user does not have unnecessary privilege
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user: name=thistle_user role_attr_flags=NOSUPERUSER,NOCREATEDB

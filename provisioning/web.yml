@@ -1,0 +1,10 @@
+---
+- hosts: production
+  gather_facts: yes
+
+  sudo: no
+
+  roles:
+    - postgresql
+    - redis
+    - production
