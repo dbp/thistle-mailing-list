@@ -3,9 +3,9 @@
              TypeFamilies, MultiParamTypeClasses,OverloadedStrings, LiberalTypeSynonyms #-}
 module List.Types where
 
+import Prelude hiding ((++))
 import Snap.Plus
 import Data.Maybe
-import Prelude hiding (id)
 import Data.Text (Text)
 import Opaleye
 import Application
@@ -17,12 +17,19 @@ data List' a b c = List' { id :: a
 
 type List'' f = List' (f Int) (f Text) (f Text)
 type List = List'' I
+type ListMaybe = List'' Maybe
 type ListSpec = List'' (Con (Wire String))
 type ListWire = List'' Wire
 type ListMaybeWire = List'' MaybeWire
 type ListNew = List' () Text ()
 
 $(makeAdaptorAndInstance "pList" ''List')
+
+listPath :: List -> Text
+listPath (List' _ nm tok) = "/" ++ nm ++ "/" ++ tok
+
+addMemberPath :: List -> Text
+addMemberPath list = listPath list ++ "/members/new"
 
 listsTable :: Table ListWire
 listsTable = Table "lists" (List' (Wire "id") (Wire "name") (Wire "token"))
@@ -44,6 +51,6 @@ getListByNameToken nm tok = listToMaybe <$> runO (listsByNameToken nm tok)
 newList :: ListNew -> AppHandler (Maybe List)
 newList (List' _ nm _) = listToMaybe <$> insOR listsTable insE retE
   where insE :: Expr ListMaybeWire
-        insE = makeMaybeExpr (List' (Nothing :: Maybe Int) (Just nm) (Nothing :: Maybe Text))
+        insE = makeMaybeExpr (List' Nothing (Just nm) Nothing :: ListMaybe)
         retE :: ExprArr ListWire ListWire
         retE = proc list -> returnA -< list

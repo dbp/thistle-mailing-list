@@ -26,7 +26,6 @@ import qualified Data.Configurator as C
 import           Snap.Plus
 import           Application
 
-import qualified List.Types as L
 import qualified List.Handlers (top)
 
 routes :: [(ByteString, AppHandler ())]

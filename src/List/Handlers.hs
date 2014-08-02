@@ -13,9 +13,7 @@ import Application
 import List.Types
 import List.Forms
 import List.Splices
-
-listPath :: List -> Text
-listPath (List' _ nm tok) = "/" ++ nm ++ "/" ++ tok
+import qualified Member.Handlers
 
 top :: AppHandler ()
 top = route [("new", newH)
@@ -23,7 +21,8 @@ top = route [("new", newH)
   where routeList = do nm <- getParam' "name"
                        token <- getParam' "token"
                        list <- require $ getListByNameToken nm token
-                       route [("", ifTop $ showH list)]
+                       route [("", ifTop $ showH list)
+                             ,("members", Member.Handlers.top list)]
 
 
 newH :: AppHandler ()
