@@ -8,7 +8,7 @@
     <dfLabel ref="body">Body</dfLabel>
     <dfInputTextArea rows="20" cols="80" ref="body"/>
     <dfChildErrors ref="body"/>
-
+    <br/>
     <dfInputSubmit/>
   </dfForm>
 

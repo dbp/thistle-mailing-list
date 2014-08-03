@@ -31,7 +31,7 @@ type MessageNew = Message' () Text Text Int ()
 $(makeAdaptorAndInstance "pMessage" ''Message')
 
 editMessagePath :: Message -> Text
-editMessagePath (Message' i _ _ _ _ ) = "/message/" ++ tshow i ++ "/edit"
+editMessagePath (Message' i _ _ _ _ ) = "/messages/" ++ tshow i ++ "/edit"
 
 messagesTable :: Table MessageWire
 messagesTable = Table "messages" (Message' (Wire "id") (Wire "subject") (Wire "body") (Wire "list_id") (Wire "sent_at"))
@@ -58,8 +58,8 @@ messagesById' i = proc () -> do message <- allMessages -< ()
                                 restrict <<< eq -< (id message, i')
                                 returnA -< message
 
-getMessageById :: Int -> Text -> AppHandler (Maybe Message)
-getMessageById i t = listToMaybe <$> runO (messagesById' i)
+getMessageById :: Int -> AppHandler (Maybe Message)
+getMessageById i = listToMaybe <$> runO (messagesById' i)
 
 newMessage :: MessageNew -> AppHandler (Maybe Message)
 newMessage (Message' _ s b li _) = listToMaybe <$> insOR messagesTable insE retE

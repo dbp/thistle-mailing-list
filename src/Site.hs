@@ -28,10 +28,12 @@ import           Application
 
 import qualified List.Handlers (top)
 import qualified Member.Handlers (top')
+import qualified Message.Handlers (top')
 
 routes :: [(ByteString, AppHandler ())]
 routes = [ ("",       List.Handlers.top)
          , ("",       Member.Handlers.top')
+         , ("",       Message.Handlers.top')
          , ("",       heistServe)
          , ("",       serveDirectory "static")
          , ("",       render "notfound")

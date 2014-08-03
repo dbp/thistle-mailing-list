@@ -51,6 +51,15 @@ listsByNameToken nm tok = proc () -> do list <- allLists -< ()
 getListByNameToken :: Text -> Text -> AppHandler (Maybe List)
 getListByNameToken nm tok = listToMaybe <$> runO (listsByNameToken nm tok)
 
+listsById :: Int -> Query ListWire
+listsById i = proc () -> do list <- allLists -< ()
+                            i' <- constant i -< ()
+                            restrict <<< eq -< (id list, i')
+                            returnA -< list
+
+getListById :: Int -> AppHandler (Maybe List)
+getListById i = listToMaybe <$> runO (listsById i)
+
 newList :: ListNew -> AppHandler (Maybe List)
 newList (List' _ nm _) = listToMaybe <$> insOR listsTable insE retE
   where insE :: Expr ListMaybeWire

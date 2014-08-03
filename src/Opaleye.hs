@@ -141,7 +141,7 @@ instance ShowConstant LocalTime where
 showQuery :: Default (PPOfContravariant Unpackspec) a a
           => Query a
           -> IO ()
-showQuery = putStrLn . showSqlForPostgresDefault
+showQuery = putStrLn . show . showSqlForPostgresDefault
 
 restrictNullable :: QueryArr (Wire a, Wire (Nullable a)) (Wire a)
 restrictNullable = proc (d, i) -> do restrict <<< not <<< isNull -< i
