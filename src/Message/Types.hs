@@ -1,5 +1,5 @@
 {-# LANGUAGE Arrows, TemplateHaskell, GADTs, QuasiQuotes, FlexibleInstances,
-             DeriveDataTypeable, FlexibleInstances,
+             DeriveDataTypeable, FlexibleInstances, StandaloneDeriving,
              TypeFamilies, MultiParamTypeClasses,OverloadedStrings, LiberalTypeSynonyms #-}
 module Message.Types where
 
@@ -7,6 +7,7 @@ import Snap.Plus
 import Data.Maybe
 import Prelude hiding (id, (++))
 import Data.Text (Text)
+import qualified Data.Text as T
 import Data.Time.Clock
 import Opaleye
 import Application
@@ -28,7 +29,14 @@ type MessageWire = Message'' Wire
 type MessageMaybeWire = Message'' MaybeWire
 type MessageNew = Message' () Text Text Int ()
 
+deriving instance Show Message
+
 $(makeAdaptorAndInstance "pMessage" ''Message')
+
+-- NOTE(dbp 2014-08-02): Fix for bug in opaleye handling of newline escapes.
+-- When coming out of the database, we correct it.
+fixNL :: Message -> Message
+fixNL m = m { body = T.replace "\\n" "\n" $ T.replace "\\r" "\r" (body m)}
 
 editMessagePath :: Message -> Text
 editMessagePath (Message' i _ _ _ _ ) = "/messages/" ++ tshow i ++ "/edit"
@@ -46,7 +54,7 @@ messagesByList list = proc () -> do message <- allMessages -< ()
                                     returnA -< message
 
 getMessagesByList :: L.List -> AppHandler [Message]
-getMessagesByList list = runO (messagesByList list)
+getMessagesByList list = map fixNL <$> runO (messagesByList list)
 
 messagesById :: Int -> ExprArr MessageWire (Wire Bool)
 messagesById i = proc message -> do i' <- econstant i -< ()
@@ -59,10 +67,10 @@ messagesById' i = proc () -> do message <- allMessages -< ()
                                 returnA -< message
 
 getMessageById :: Int -> AppHandler (Maybe Message)
-getMessageById i = listToMaybe <$> runO (messagesById' i)
+getMessageById i = listToMaybe . map fixNL <$> runO (messagesById' i)
 
 newMessage :: MessageNew -> AppHandler (Maybe Message)
-newMessage (Message' _ s b li _) = listToMaybe <$> insOR messagesTable insE retE
+newMessage (Message' _ s b li _) = listToMaybe . map fixNL <$> insOR messagesTable insE retE
   where insE :: Expr MessageMaybeWire
         insE = makeMaybeExpr (Message' Nothing (Just s) (Just b) (Just li) Nothing :: MessageMaybe)
         retE :: ExprArr MessageWire MessageWire
