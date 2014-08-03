@@ -40,6 +40,9 @@ listsTable = Table "lists" (List' (Wire "id") (Wire "name") (Wire "token"))
 allLists :: Query ListWire
 allLists = queryTable listsTable
 
+getAllLists :: AppHandler [List]
+getAllLists = runO allLists
+
 listsByNameToken :: Text -> Text -> Query ListWire
 listsByNameToken nm tok = proc () -> do list <- allLists -< ()
                                         nm' <- constant nm -< ()

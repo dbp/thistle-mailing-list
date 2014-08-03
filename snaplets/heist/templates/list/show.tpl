@@ -1,5 +1,7 @@
 <apply template="base">
 
+  <a href="/">Home</a>
+
   <h1><name/></h1>
 
   <a href="${addMessagePath}">Add message</a>

@@ -27,6 +27,8 @@ import           Snap.Plus
 import           Application
 
 import qualified List.Handlers (top)
+import qualified List.Splices as L
+import qualified List.Types as L
 import qualified Member.Handlers (top')
 import qualified Message.Handlers (top')
 
@@ -81,3 +83,5 @@ siteSplices = do "prefix-url" ## prefixUrlSplice
                  "suffix-url" ## suffixUrlSplice
                  bindStrictTag ## bindStrictImpl
                  ignoreTag ## ignoreImpl
+                 "lists" ## do ls <- lift L.getAllLists
+                               I.mapSplices (I.runChildrenWith . L.splices) ls
